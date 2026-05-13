@@ -5,8 +5,10 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import connectDb from './config/db.js'
+import connectDb from "./config/db.js";
 import errorHandler from "./middleware/errorHandler.js"
+
+import authRoutes from "./routes/authRoutes.js"
 
 //ES6 module __dirname alternative
 const __filename = fileURLToPath(import.meta.url);
@@ -32,9 +34,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 //static folder for uploads
-app.use('/uploads',express.static(path.json(__dirname, "uploads")));
+// app.use('/uploads',express.static(path.json(__dirname, "uploads")));
 
 //Routes
+app.use("/api/auth",authRoutes)
   
 app.use(errorHandler);
 
@@ -52,12 +55,12 @@ app.use((req,res) =>{
 
 
 //start server
-const PORT = process.env.PORT || 8000; 
+const PORT = process.env.PORT || 3000; 
 app.listen(PORT, () => {
     console.log(`server  running in ${process.env.NODE_ENV} mode on port ${PORT}`)
 })
 
-process.on('unhandleRejection', (err) => {
+process.on('unhandledRejection', (err) => {
     console.error(`Error: ${err.message}`);
     process.exit(1);
-})
+});
