@@ -9,6 +9,7 @@ import connectDb from "./config/db.js";
 import errorHandler from "./middleware/errorHandler.js"
 
 import authRoutes from "./routes/authRoutes.js"
+import documentRoutes from "./routes/documentRoutes.js"
 
 //ES6 module __dirname alternative
 const __filename = fileURLToPath(import.meta.url);
@@ -38,6 +39,7 @@ app.use(express.urlencoded({extended:true}));
 
 //Routes
 app.use("/api/auth",authRoutes)
+app.use('/api/documents',documentRoutes)
   
 app.use(errorHandler);
 

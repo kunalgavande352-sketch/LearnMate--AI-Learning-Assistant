@@ -11,7 +11,7 @@ const documentSchema = new mongoose.Schema({
         required:[true,'Please provide a document title'],
         trim:true
     },
-    fileName:{
+    filename:{
         type:String,
         required:true,
     },
@@ -25,7 +25,7 @@ const documentSchema = new mongoose.Schema({
     },
     extractedText:{
         type:String,
-        required:'',
+        default:'',
     },
     chunks:[{
         content:{
