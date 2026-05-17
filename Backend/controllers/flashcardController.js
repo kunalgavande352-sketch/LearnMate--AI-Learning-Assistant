@@ -107,7 +107,11 @@ export const toggleStarFlashcard = async (req,res,next) => {
             })
         }
 
-        const cardIndex = flashcardSet.findIndex(card => card._id.toString() === req.params.cardId);
+        // const cardIndex = flashcardSet.findIndex(card => card._id.toString() === req.params.cardId);
+                const cardIndex = flashcardSet.cards.findIndex(
+            card => card._id.toString() === req.params.cardId
+        );
+
 
         if(cardIndex === -1){
             return res.status(404).json({
