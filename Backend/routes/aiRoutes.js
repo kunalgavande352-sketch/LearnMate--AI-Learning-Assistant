@@ -10,7 +10,7 @@ router.post('/generate-flashcards',generatFlashcards);
 router.post("/generate-quiz",generateQuiz);
 router.post("/generate-summary",generateSummary);
 router.post("/chat",chat);
-router.post("/explane-concept",explainConcept);
+router.post("/explain-concept",explainConcept);
 router.get("/chat-history/:documentId",getChatHistory);
 
 export default router

@@ -286,12 +286,23 @@ export const explainConcept = async (req,res,next) => {
             })
         }
 
-        // Find relevent chunks for the concept
-        const relevantChunks = findRelevantChunks(document.chunks,concept,3);
-        const context = relevantChunks.map(c => c.context).join('n\n');
+        // // Find relevent chunks for the concept
+        // const relevantChunks = findRelevantChunks(document.chunks,concept,3);
+        // const context = relevantChunks.map(c => c.context).join('n\n');
 
-        // Generate Explanation using Gemini
-        const explanation = await geminiService.explainConcept(concept,context);
+        // // Generate Explanation using Gemini
+        // const explanation = await geminiService.explainConcept(concept,context);
+
+        const relevantChunks = findRelevantChunks(document.chunks, concept, 3);
+
+const context = relevantChunks
+    .map(c => c.content)
+    .join('\n\n');
+
+const explanation = await geminiService.explainConcept(
+    concept,
+    context
+);
 
         res.status(200).json({
             success:true,
@@ -313,7 +324,7 @@ export const explainConcept = async (req,res,next) => {
 
 export const getChatHistory = async (req,res,next) => {
     try {
-        const {documentId} = req.body;
+        const {documentId} = req.params;
 
         if(!documentId){
             return res.status(400).json({
@@ -326,12 +337,12 @@ export const getChatHistory = async (req,res,next) => {
         const chatHistory = await ChatHistory.findOne({
             userId: req.user._id,
                 documentId:documentId,        
-        }).select('message');    // Only retrieve the messages array
+        }).select('messages');    // Only retrieve the messages array
 
 
         if(!chatHistory){
             return res.status(200).json({
-                success:trye,
+                success:true,
                 data: [], // Return an empty array if no chat history found
                 message:"No chat history found for this document"
             });

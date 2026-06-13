@@ -13,6 +13,11 @@ import documentRoutes from "./routes/documentRoutes.js"
 import flashcardRoutes from "./routes/flashcardRoutes.js"
 import aiRoutes from "./routes/aiRoutes.js"
 import quizRoutes from "./routes/quizRoutes.js"
+import progressRoutes from "./routes/progressRoutes.js"
+
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import passport from "passport";
+import User from "./models/User.js";
 
 
 //ES6 module __dirname alternative
@@ -28,7 +33,7 @@ connectDb();
 // Middleware to handle CORS
 app.use(
     cors({
-        origin:"*",
+        origin:"http://localhost:5173",
         methods:["GET","POST","PUT","DELETE"],
         allowedHeaders:["Content-Type","Authorization"],
         credentials:true
@@ -41,12 +46,54 @@ app.use(express.urlencoded({extended:true}));
 //static folder for uploads
 // app.use('/uploads',express.static(path.json(__dirname, "uploads")));
 
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
+
+app.use(passport.initialize());
+
+passport.use(
+    new GoogleStrategy(
+         {
+            clientID:process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: process.env.GOOGLE_CALLBACK_URL
+            
+         },
+         async (accessToken,refreshToken,profile,cb) => {
+             let email = profile.emails[0].value;
+             let name = profile.name.givenName;
+
+
+             let isExisted = await User.findOne({email});
+
+             if(isExisted) return cb(null,isExisted);
+
+
+             let newUser = await User.create({
+                name,
+                email,
+                provider:profile.provider,
+                provider_id:profile.id,
+             });
+
+             return cb(null,newUser)
+         }
+    )
+);
+        app.get("/",(req,res) => {
+    res.send("error in google")
+})
+
+
 //Routes
 app.use("/api/auth",authRoutes)
 app.use('/api/documents',documentRoutes)
 app.use("/api/flashcards",flashcardRoutes)
 app.use("/api/ai",aiRoutes)
 app.use("/api/quizzes",quizRoutes)
+app.use("/api/progress",progressRoutes)
   
 app.use(errorHandler);
 
