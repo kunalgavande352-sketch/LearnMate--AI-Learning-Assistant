@@ -1,14 +1,4 @@
-# env files
 .env
-**/.env
 
-# dependencies
 node_modules/
-**/node_modules/
-
-#uploads
-uploads/documents/
-
-
-# logs
-*.log
+package-lock.json

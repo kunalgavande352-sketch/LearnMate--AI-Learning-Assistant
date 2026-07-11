@@ -1,13 +1,9 @@
-# env files
-.env
-**/.env
+# Backend
+backend/.env
+backend/node_modules/
+Backend/uploads/
 
-# dependencies
-node_modules/
-**/node_modules/
 
-# uploads
-Backend/uploads/documents/
-
-# logs
-*.log
+# Frontend
+Frontend/learnMate/src/.env
+frontend/node_modules/
